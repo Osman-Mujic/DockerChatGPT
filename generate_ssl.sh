@@ -1,11 +1,14 @@
 #!/bin/bash
 
-# Generate SSL certificate and private key
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout "/etc/ssl/certs/server.key" -out "/etc/ssl/certs/server.crt" -subj "//C=US/ST=State/L=City/O=Organization/CN=example.com"
+# Create the ssl directory if it doesn't exist
+mkdir -p ssl
 
-# Set appropriate permissions
-chmod 600 /etc/ssl/certs/server.key
-chmod 600 /etc/ssl/certs/server.crt
+# Generate SSL certificate and key
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/server.key -out ssl/server.crt -subj "//C=US/ST=State/L=City/O=Organization/CN=example.com"
+
+# Set appropriate permissions for the SSL files
+chmod 600 ssl/server.key ssl/server.crt
+
 
 # Restart Apache
 service apache2 restart
