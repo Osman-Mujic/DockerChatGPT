@@ -38,8 +38,5 @@ RUN a2ensite default-ssl
 COPY generate_ssl.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/generate_ssl.sh
 
-# Set resource limits for Apache and PHP
-# Remove the resource limit configuration in the Dockerfile
-
 # Start Supervisor
 CMD ["/usr/bin/supervisord", "-n"]
