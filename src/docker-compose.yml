@@ -10,6 +10,7 @@ services:
       - "443:443"
     volumes:
       - ./src:/var/www/html
+      - ./ssl:/etc/ssl/certs
     environment:
       MYSQL_ROOT_PASSWORD: secret
     deploy:
