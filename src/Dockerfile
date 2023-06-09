@@ -26,9 +26,9 @@ RUN docker-php-ext-install mbstring
 RUN apt-get update && apt-get install -y supervisor
 
 # Copy Apache and SSL configurations
-COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
-COPY ssl/server.crt /etc/ssl/certs/server.crt
-COPY ssl/server.key /etc/ssl/certs/server.key
+COPY apache-config.conf ./etc/apache2/sites-available/000-default.conf
+COPY ./ssl/server.crt ./etc/ssl/certs/server.crt
+COPY ./ssl/server.key ./etc/ssl/certs/server.key
 
 # Enable Apache modules and SSL
 RUN a2enmod proxy proxy_http ssl
@@ -37,6 +37,16 @@ RUN a2ensite default-ssl
 # Copy the SSL generation script and make it executable
 COPY generate_ssl.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/generate_ssl.sh
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Copy the project files
+WORKDIR /var/www/html
+COPY src .
+
+# Install project dependencies
+RUN composer install --no-scripts
 
 # Start Supervisor
 CMD ["/usr/bin/supervisord", "-n"]
