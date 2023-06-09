@@ -34,13 +34,12 @@ COPY ssl/server.key /etc/ssl/certs/server.key
 RUN a2enmod proxy proxy_http ssl
 RUN a2ensite default-ssl
 
+# Copy the SSL generation script and make it executable
+COPY generate_ssl.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/generate_ssl.sh
+
 # Set resource limits for Apache and PHP
-RUN echo "php_admin_value[memory_limit] = 2G" >> /etc/php/7.4/apache2/php.ini
-RUN echo "php_admin_value[opcache.memory_consumption] = 256" >> /etc/php/7.4/apache2/php.ini
-RUN echo "php_admin_value[opcache.max_accelerated_files] = 20000" >> /etc/php/7.4/apache2/php.ini
-RUN echo "php_admin_value[opcache.revalidate_freq] = 60" >> /etc/php/7.4/apache2/php.ini
-RUN echo "MaxRequestWorkers 150" >> /etc/apache2/apache2.conf
-RUN echo "ServerLimit 16" >> /etc/apache2/apache2.conf
+# Remove the resource limit configuration in the Dockerfile
 
 # Start Supervisor
 CMD ["/usr/bin/supervisord", "-n"]
