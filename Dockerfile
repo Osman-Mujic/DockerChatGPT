@@ -5,24 +5,52 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     libicu-dev \
-    libcurl4-openssl-dev
+    libcurl4-openssl-dev \
+    libmagickwand-dev \
+    libxml2-dev \
+    build-essential \
+    && apt-get clean all
+
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install intl
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmagickwand-dev \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick
 RUN docker-php-ext-install curl
-RUN docker-php-ext-install imagick
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install simplexml
-RUN docker-php-ext-install redis
+RUN pecl install redis \
+    && docker-php-ext-enable redis
 RUN docker-php-ext-install dom
-RUN docker-php-ext-install libxml
-RUN yes | pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
+RUN apt-get update && apt-get install -y libxml2-dev \
+    && docker-php-ext-configure xml \
+    && docker-php-ext-install xml
+
+# Download and install Xdebug
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    && wget https://xdebug.org/files/xdebug-3.1.1.tgz \
+    && tar -xf xdebug-3.1.1.tgz \
+    && rm xdebug-3.1.1.tgz \
+    && cd xdebug-3.1.1 \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
+    && cd .. \
+    && rm -r xdebug-3.1.1 \
+    && apt-get purge -y --auto-remove wget \
+    && apt-get clean all
+
+# Configure Xdebug
+RUN echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 RUN docker-php-ext-install json
-RUN docker-php-ext-install mbstring
+
 RUN apt-get update && apt-get install -y supervisor
 
 # Copy Apache and SSL configurations
@@ -43,7 +71,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Copy the project files
 WORKDIR /var/www/html
-COPY C:\\Users\\Osman\\Desktop\\DockerChatGPT\\src .
+COPY src .
 
 # Copy WebSocket server code to the container
 WORKDIR /app
