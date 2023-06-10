@@ -26,9 +26,9 @@ RUN docker-php-ext-install mbstring
 RUN apt-get update && apt-get install -y supervisor
 
 # Copy Apache and SSL configurations
-COPY apache-config.conf ./etc/apache2/sites-available/000-default.conf
-COPY ./ssl/server.crt ./etc/ssl/certs/server.crt
-COPY ./ssl/server.key ./etc/ssl/certs/server.key
+COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+COPY ssl/server.crt /etc/ssl/certs/server.crt
+COPY ssl/server.key /etc/ssl/certs/server.key
 
 # Enable Apache modules and SSL
 RUN a2enmod proxy proxy_http ssl
@@ -43,10 +43,22 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Copy the project files
 WORKDIR /var/www/html
-COPY src .
+COPY C:\\Users\\Osman\\Desktop\\DockerChatGPT\\src .
 
-# Install project dependencies
-RUN composer install --no-scripts
+# Copy WebSocket server code to the container
+WORKDIR /app
+COPY websocket_server.php /app
+
+# Install dependencies for WebSocket server
+RUN apt-get install -y git
+
+# Install dependencies using Composer for WebSocket server
+RUN composer install --no-dev --optimize-autoloader
+
+# Set the entrypoint for the container
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Start Supervisor
 CMD ["/usr/bin/supervisord", "-n"]
