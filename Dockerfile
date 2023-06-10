@@ -70,18 +70,13 @@ RUN chmod +x /usr/local/bin/generate_ssl.sh
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy the project files
-WORKDIR /var/www/html
-COPY src .
+COPY . /var/www/html
 
 # Copy WebSocket server code to the container
-WORKDIR /app
-COPY websocket_server.php /app
+COPY websocket_server.php /app/websocket_server.php
 
 # Install dependencies for WebSocket server
 RUN apt-get install -y git
-
-# Install dependencies using Composer for WebSocket server
-RUN composer install --no-dev --optimize-autoloader
 
 # Set the entrypoint for the container
 COPY entrypoint.sh /usr/local/bin/
@@ -90,3 +85,7 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Start Supervisor
 CMD ["/usr/bin/supervisord", "-n"]
+
+# Install dependencies using Composer for WebSocket server
+WORKDIR /var/www/html
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
