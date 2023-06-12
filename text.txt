@@ -1,0 +1,86 @@
+2023-06-11 12:41:56 AH00526: Syntax error on line 32 of /etc/apache2/sites-enabled/default-ssl.conf:
+2023-06-11 12:41:56 SSLCertificateFile: file '/etc/ssl/certs/ssl-cert-snakeoil.pem' does not exist or is empty
+2023-06-11 13:07:46 AH00526: Syntax error on line 32 of /etc/apache2/sites-enabled/default-ssl.conf:
+2023-06-11 12:41:56 Action 'start' failed.
+2023-06-11 12:41:56 The Apache error log may have more information.
+2023-06-11 12:41:56 use Ratchet\MessageComponentInterface;
+2023-06-11 12:41:56 use Ratchet\ConnectionInterface;
+2023-06-11 12:41:56 
+2023-06-11 12:41:56 require 'vendor/autoload.php';
+2023-06-11 12:41:56 
+2023-06-11 12:41:56 class MyWebSocketServer implements MessageComponentInterface
+2023-06-11 12:41:56 {
+2023-06-11 12:41:56     public function onOpen(ConnectionInterface $connection)
+2023-06-11 12:41:56     {
+2023-06-11 12:41:56         // New websocket connection opened
+2023-06-11 12:41:56         echo "New connection opened: {$connection->resourceId}\n";
+2023-06-11 12:41:56     }
+2023-06-11 12:41:56 
+2023-06-11 12:41:56     public function onMessage(ConnectionInterface $from, $message)
+2023-06-11 12:41:56     {
+2023-06-11 12:41:56         // Handle incoming message from a client
+2023-06-11 12:41:56         echo "Received message from {$from->resourceId}: {$message}\n";
+2023-06-11 12:41:56 
+2023-06-11 12:41:56         // Send a response back to the client
+2023-06-11 12:41:56         $from->send("Server says: {$message}");
+2023-06-11 12:41:56     }
+2023-06-11 12:41:56 
+2023-06-11 12:41:56     public function onClose(ConnectionInterface $connection)
+2023-06-11 12:41:56     {
+2023-06-11 12:41:56         // Websocket connection closed
+2023-06-11 12:41:56         echo "Connection closed: {$connection->resourceId}\n";
+2023-06-11 12:41:56     }
+2023-06-11 12:41:56 
+2023-06-11 12:41:56     public function onError(ConnectionInterface $connection, \Exception $exception)
+2023-06-11 12:41:56     {
+2023-06-11 12:41:56         // Error occurred in the websocket connection
+2023-06-11 12:41:56         echo "An error occurred in connection {$connection->resourceId}: {$exception->getMessage()}\n";
+2023-06-11 12:41:56         $connection->close();
+2023-06-11 12:41:56     }
+2023-06-11 12:41:56 }
+2023-06-11 12:41:56 
+2023-06-11 12:41:56 $server = new \Ratchet\App('localhost', 8080);
+2023-06-11 12:41:56 $server->route('/', new MyWebSocketServer(), ['*']);
+2023-06-11 12:41:56 $server->run();
+2023-06-11 13:07:47 Action 'start' failed.
+2023-06-11 13:07:47 The Apache error log may have more information.
+2023-06-11 13:07:47 use Ratchet\MessageComponentInterface;
+2023-06-11 13:07:47 use Ratchet\ConnectionInterface;
+2023-06-11 13:07:47 
+2023-06-11 13:07:47 require 'vendor/autoload.php';
+2023-06-11 13:07:47 
+2023-06-11 13:07:47 class MyWebSocketServer implements MessageComponentInterface
+2023-06-11 13:07:47 {
+2023-06-11 13:07:47     public function onOpen(ConnectionInterface $connection)
+2023-06-11 13:07:47     {
+2023-06-11 13:07:47         // New websocket connection opened
+2023-06-11 13:07:47         echo "New connection opened: {$connection->resourceId}\n";
+2023-06-11 13:07:47     }
+2023-06-11 13:07:47 
+2023-06-11 13:07:47     public function onMessage(ConnectionInterface $from, $message)
+2023-06-11 13:07:47     {
+2023-06-11 13:07:47         // Handle incoming message from a client
+2023-06-11 13:07:47         echo "Received message from {$from->resourceId}: {$message}\n";
+2023-06-11 13:07:47 
+2023-06-11 13:07:47         // Send a response back to the client
+2023-06-11 13:07:47         $from->send("Server says: {$message}");
+2023-06-11 13:07:47     }
+2023-06-11 13:07:47 
+2023-06-11 13:07:47     public function onClose(ConnectionInterface $connection)
+2023-06-11 13:07:47     {
+2023-06-11 13:07:47         // Websocket connection closed
+2023-06-11 13:07:47         echo "Connection closed: {$connection->resourceId}\n";
+2023-06-11 13:07:47     }
+2023-06-11 13:07:47 
+2023-06-11 13:07:47     public function onError(ConnectionInterface $connection, \Exception $exception)
+2023-06-11 13:07:47     {
+2023-06-11 13:07:47         // Error occurred in the websocket connection
+2023-06-11 13:07:47         echo "An error occurred in connection {$connection->resourceId}: {$exception->getMessage()}\n";
+2023-06-11 13:07:47         $connection->close();
+2023-06-11 13:07:47     }
+2023-06-11 13:07:47 }
+2023-06-11 13:07:47 
+2023-06-11 13:07:47 $server = new \Ratchet\App('localhost', 8080);
+2023-06-11 13:07:47 $server->route('/', new MyWebSocketServer(), ['*']);
+2023-06-11 13:07:46 SSLCertificateFile: file '/etc/ssl/certs/ssl-cert-snakeoil.pem' does not exist or is empty
+2023-06-11 13:07:47 $server->run();
